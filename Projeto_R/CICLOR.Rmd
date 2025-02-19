@@ -1,0 +1,172 @@
+---
+title: "Bedidas pelo mundo - Mineração - aplicação de algoritmos -  Porções médias por pessoa Fonte: Organização Mundial da Saúde, Sistema Global de Informação sobre Álcool e Saúde (GISAH), 2010"
+fonte dos dados: "https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption"
+output: html_document
+date: "2025-02-14"
+Grupo - Alunos: Rafael Uchôa Ribeiro - Matrícula: 202409030642, Mariana, Bruno, Matheus e Anderson
+---
+VARIABLES:
+country - País
+Wine_servings - Porções de vinho consumidas por pessoa
+BEER_servings - Porções de cerveja consumidas por pessoa
+SPIRIT_servings - Porções de destilados consumidas por pessoa
+TOTAL_litres_of_pure_alcohol - Consumo total de álcool por pessoa (em litros)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#ler e importar
+```{r}
+dados <- read.csv("drinks.csv")
+str(dados)
+```  
+
+# Exibe as primeiras linhas do dataframe
+
+```{r}
+head(dados) 
+```  
+
+#Destacar os valores máximos das 20 primeiras linhas
+```{r}
+library(dplyr)
+maximos_20_primeiras <- dados %>% 
+  slice_head(n = 20) %>% # Seleciona as 20 primeiras linhas
+  summarise(across(where(is.numeric), max, na.rm = TRUE)) # Calcula o máximo para colunas numéricas, ignorando NAs
+print("Valores Máximos das 20 Primeiras Linhas:")
+print(maximos_20_primeiras)
+
+```
+
+#Destacar os valores mínimos das 20 primeiras linhas
+```{r}
+minimos_20_ultimas <- dados %>% 
+  slice_tail(n = 20) %>% # Seleciona as 20 últimas linhas
+  summarise(across(where(is.numeric), min, na.rm = TRUE)) # Calcula o mínimo para colunas numéricas, ignorando NAs
+print("Valores Mínimos das 20 Últimas Linhas:")
+print(minimos_20_ultimas)
+
+```  
+#listar os nomes das colunas
+```{r}  
+nomes_colunas <- names(dados)
+print("Nomes das Colunas:")
+print(nomes_colunas)
+```  
+
+#verficar a dimensão do dataset (total de linhas e colunas)
+```{r}
+dimensao <- dim(dados)
+print("Dimensão do Dataset (Linhas x Colunas):")
+print(dimensao)
+```  
+#Contar o total de amostras por variável categórica
+```{r}
+contagem_categorias <- dados %>% 
+  count(country)
+print("Contagem de Amostras por Variável Categórica:")  
+print(contagem_categorias)
+```  
+#estatística básica para o dataset
+```{r}  
+
+estatisticas_basicas <- dados %>% 
+  summarise(across(where(is.numeric), list(mean, median, sd, min, max), na.rm = TRUE))
+print("Estatísticas Básicas para o Dataset:")  
+print(estatisticas_basicas)
+```
+#Realizar a análise de correlação via linha de comando
+```{r}  
+correlacao <- cor(dados[,2:5])
+print("Matriz de Correlação:")
+print(correlacao)
+```  
+#Realizar a análise de correlação via gráfico
+```{r}  
+if(!require(corrplot)){install.packages("corrplot")}
+library(corrplot)
+corrplot(correlacao, method = "color", type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45) # Visualização da correlação
+```  
+#Criar um gráfico heatmap a partir das variáveis usadas na correlação
+```{r}
+library(ggplot2)
+library(reshape2)
+dados_correlacao <- melt(correlacao)
+ggplot(data = dados_correlacao, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Heatmap da Correlação entre as Variáveis",
+       x = "Variável 1",
+       y = "Variável 2")
+```
+#Criar um scatterplot para o par de variáveis com maior correlação
+```{r}
+correlacao_triangular <- correlacao
+correlacao_triangular[lower.tri(correlacao_triangular, diag = TRUE)] <- NA
+max_cor <- which(correlacao_triangular == max(correlacao_triangular, na.rm = TRUE), arr.ind = TRUE)
+
+var1 <- rownames(correlacao)[max_cor[1, 1]]
+var2 <- colnames(correlacao)[max_cor[1, 2]]
+ggplot(dados, aes_string(x = var1, y = var2)) + # Usa aes_string para nomes de variáveis
+  geom_point() +
+  labs(title = paste("Scatterplot de", var1, "e", var2),
+       x = var1, y = var2) +
+  theme_bw()
+```
+#Realizar a análise bivariada com scatterplots para variáveis categóricas
+```{r}
+if(!require(ggplot2)){install.packages("ggplot2")}
+library(ggplot2)
+ggplot(dados, aes(x = country, y = total_litres_of_pure_alcohol)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Boxplot do Consumo Total de Álcool por País",
+       x = "País",
+       y = "Consumo Total de Álcool (litros)")
+```
+#Histograma para uma variável numérica
+```{r}
+ggplot(dados, aes(x = total_litres_of_pure_alcohol)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Histograma do Consumo Total de Álcool",
+       x = "Consumo Total de Álcool (litros)",
+       y = "Frequência")
+```
+#Vários histogramas para variáveis numéricas
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+#colunas numéricas selecionadas
+dados_numericos <- dados %>%
+  select(country, beer_servings, total_litres_of_pure_alcohol)
+
+# Conversão para o formato longo
+dados_longo <- dados_numericos %>%
+  gather(key = "Variável", value = "Valor", -country)
+
+# gráfico com facetas (usando dados_longo)
+ggplot(dados_longo, aes(x = Valor)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap(~ Variável, scales = "free") +
+  labs(title = "Histogramas de Consumo de Cerveja e Álcool Total",
+       x = "Consumo",
+       y = "Frequência")
+```
+#Boxplots para verificar outliers
+```{r}
+ggplot(dados, aes(x = country, y = total_litres_of_pure_alcohol)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Boxplot do Consumo Total de Álcool por País",
+       x = "País",
+       y = "Consumo Total de Álcool (litros)")
+
+```
+
