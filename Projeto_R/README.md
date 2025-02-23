@@ -9,12 +9,11 @@ Este projeto realiza uma análise exploratória de dados (EDA) sobre o consumo d
 * **ggplot2**: Criação de gráficos estatísticos.
 * **corrplot**: Visualização de matrizes de correlação.
 * **plotly**: Criação de gráficos interativos.
-* **reshape2**: Auxiliar na transformação de dados para gráficos de correlação.
 
 ## ETL (Extração - Transformação - Carga)
 
 1.  **Fonte dos Dados:**
-    * Dados referentes ao consumo de alcool em diversos países ao redor do mundo.
+    * Dados referentes ao consumo de alcool em diversos países ao redor do mundo. - "https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption"
 
 2.  **Metadados (Dicionário de Dados):**
     * `country`: Nome do país.
