@@ -90,6 +90,14 @@ library(corrplot)
 corrplot(correlacao, method = "color", type = "upper", order = "hclust", 
          tl.col = "black", tl.srt = 45) # Visualização da correlação
 ```  
+#Análise dos Dados:  
+A matriz de correlação mostra a relação entre as variáveis numéricas do dataset. Cada célula da matriz contém o coeficiente de correlação entre duas variáveis, variando de -1 a 1.
+Os valores próximos de 1 indicam uma correlação positiva forte, enquanto os valores próximos de -1 indicam uma correlação negativa forte. Valores próximos de 0 indicam pouca ou nenhuma correlação.
+O gráfico de correlação destaca visualmente as relações entre as variáveis. As cores e a disposição das células facilitam a identificação de padrões de correlação.
+As variáveis "beer_servings" e "total_litres_of_pure_alcohol" têm uma correlação positiva forte, indicando que o consumo de cerveja está relacionado ao consumo total de álcool.
+As variáveis "spirit_servings" e "total_litres_of_pure_alcohol" também têm uma correlação positiva, mas menos forte do que as variáveis de cerveja.
+A variável "wine_servings" tem uma correlação mais fraca com o consumo total de álcool, indicando que o consumo de vinho não está tão fortemente relacionado ao consumo total de álcool.
+
 #Criar um gráfico heatmap a partir das variáveis usadas na correlação
 ```{r}
 library(ggplot2)
@@ -104,6 +112,16 @@ ggplot(data = dados_correlacao, aes(x = Var1, y = Var2, fill = value)) +
        x = "Variável 1",
        y = "Variável 2")
 ```
+#Análise dos Dados:
+O heatmap mostra visualmente a matriz de correlação entre as variáveis numéricas do dataset. Cada célula do gráfico é colorida de acordo com o valor do coeficiente de correlação entre duas variáveis.  
+As cores variam de azul (correlação negativa) a vermelho (correlação positiva), com tons de branco indicando correlação próxima de zero.
+Os eixos x e y representam as variáveis analisadas, permitindo identificar padrões de correlação entre elas.
+O heatmap facilita a visualização das relações entre as variáveis, destacando as correlações mais fortes e mais fracas.
+As células azuis indicam correlações negativas, enquanto as células vermelhas indicam correlações positivas. As células brancas representam correlações próximas de zero.
+Existe correlação positiva forte entre "beer_servings" e "total_litres_of_pure_alcohol", indicando que o consumo de cerveja está relacionado ao consumo total de álcool.
+A correlação entre "spirit_servings" e "total_litres_of_pure_alcohol" também é positiva, mas menos forte do que a correlação entre cerveja e álcool total.
+A correlação entre "wine_servings" e "total_litres_of_pure_alcohol" é mais fraca, indicando que o consumo de vinho não está tão fortemente relacionado ao consumo total de álcool.
+
 #Criar um scatterplot para o par de variáveis com maior correlação
 ```{r}
 correlacao_triangular <- correlacao
@@ -118,6 +136,12 @@ ggplot(dados, aes_string(x = var1, y = var2)) + # Usa aes_string para nomes de v
        x = var1, y = var2) +
   theme_bw()
 ```
+#Analise dos Dados:
+O scatterplot mostra a relação entre as variáveis "beer_servings" e "total_litres_of_pure_alcohol", que têm a maior correlação positiva no dataset.
+Cada ponto no gráfico representa um país, com o eixo x representando o consumo de cerveja e o eixo y representando o consumo total de álcool.
+A dispersão dos pontos no gráfico indica a relação entre as duas variáveis. Países com maior consumo de cerveja tendem a ter um consumo total de álcool mais elevado.
+O scatterplot permite visualizar a tendência geral da relação entre as variáveis, destacando os países com padrões de consumo de cerveja e álcool total mais extremos.
+
 #Realizar a análise bivariada com scatterplots para variáveis categóricas
 ```{r}
 if(!require(ggplot2)){install.packages("ggplot2")}
@@ -129,6 +153,13 @@ ggplot(dados, aes(x = country, y = total_litres_of_pure_alcohol)) +
        x = "País",
        y = "Consumo Total de Álcool (litros)")
 ```
+#Análise dos Dados:
+O boxplot mostra a distribuição do consumo total de álcool por país, permitindo comparar os padrões de consumo entre diferentes países.
+Cada caixa no gráfico representa a distribuição do consumo de álcool em um país, com a linha mediana indicando a mediana do consumo.
+Os outliers são representados por pontos individuais, destacando os países com padrões de consumo extremos em relação à maioria.
+A disposição dos boxplots permite identificar rapidamente os países com os menores e maiores consumos de álcool, destacando as diferenças entre os países.
+A rotação dos nomes dos países no eixo x facilita a leitura do gráfico, evitando a sobreposição dos rótulos.
+
 #Histograma para uma variável numérica
 ```{r}
 ggplot(dados, aes(x = total_litres_of_pure_alcohol)) +
@@ -137,6 +168,13 @@ ggplot(dados, aes(x = total_litres_of_pure_alcohol)) +
        x = "Consumo Total de Álcool (litros)",
        y = "Frequência")
 ```
+#Análise dos Dados:
+O histograma mostra a distribuição do consumo total de álcool por pessoa, permitindo visualizar a frequência de diferentes níveis de consumo.
+O eixo x representa o consumo total de álcool em litros, enquanto o eixo y representa a frequência de países com cada nível de consumo.
+A forma do histograma indica a distribuição dos dados, destacando os valores mais comuns e os extremos.
+No caso do consumo total de álcool, a maioria dos países tem um consumo entre 0 e 10 litros, com poucos países consumindo quantidades muito maiores.
+O histograma facilita a identificação de padrões de consumo e a comparação entre os países, destacando as diferenças nos níveis de consumo de álcool.
+
 #Vários histogramas para variáveis numéricas
 ```{r}
 library(dplyr)
@@ -159,14 +197,46 @@ ggplot(dados_longo, aes(x = Valor)) +
        x = "Consumo",
        y = "Frequência")
 ```
+#Análise dos Dados:
+O gráfico resultante mostra dois histogramas lado a lado: um para "beer_servings" e outro para "total_litres_of_pure_alcohol".
+Cada histograma mostra a distribuição da respectiva variável numérica, com o eixo x representando os valores da variável e o eixo y representando a frequência.
+O histograma de "beer_servings" indica que a maioria dos países tem um consumo de cerveja entre 0 e 100 porções, com poucos países consumindo quantidades maiores.
+O histograma de "total_litres_of_pure_alcohol" mostra uma distribuição mais ampla, com a maioria dos países consumindo entre 0 e 10 litros de álcool puro, mas alguns países consumindo quantidades muito maiores.
+A comparação dos histogramas permite visualizar as diferenças nas distribuições das duas variáveis numéricas, destacando os padrões de consumo de cerveja e álcool total.
+
 #Boxplots para verificar outliers
 ```{r}
-ggplot(dados, aes(x = country, y = total_litres_of_pure_alcohol)) +
-  geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(title = "Boxplot do Consumo Total de Álcool por País",
-       x = "País",
-       y = "Consumo Total de Álcool (litros)")
+library(plotly)
+library(dplyr)
+
+# Ordenando os dados para melhor visualização
+dados <- dados %>%
+  mutate(country = reorder(country, total_litres_of_pure_alcohol, FUN = median))
+
+# Criando o boxplot com plotly e tooltips detalhados
+p <- plot_ly(dados,
+             y = ~total_litres_of_pure_alcohol,
+             x = ~country,
+             type = "box",
+             boxpoints = "outliers",
+             marker = list(color = "blue"),
+             text = ~paste("País:", country, "<br>Consumo:", total_litres_of_pure_alcohol), # Tooltips detalhados
+             hoverinfo = "text") %>% # Especifica que os tooltips usarão o texto definido acima
+  layout(title = list(text = "Boxplot do Consumo Total de Álcool por País", x = 0.5), # Centralizando o titulo.
+         xaxis = list(title = "País", tickangle = 100),
+         yaxis = list(title = "Consumo Total de Álcool (litros)"),
+         margin = list(b = 100)) # Aumentando a margem inferior para evitar corte dos nomes dos paises.
+
+# Exibindo o gráfico
+p
 
 ```
 
+#Análise dos Dados:
+
+Título: "Boxplot do Consumo Total de Álcool por País" - Indica claramente o que o gráfico representa.
+Eixo Y: "Consumo Total de Álcool (litros)" - Mostra a quantidade de álcool consumida, em litros.
+Eixo X: "País" - Lista os países, ordenados pelo consumo mediano de álcool.
+Boxplots: Cada país é representado por um conjunto de pontos, que indicam os valores de consumo de álcool. A disposição dos pontos permite visualizar a distribuição e identificar outliers.
+A ordenação dos países pelo consumo mediano de álcool facilita a comparação. Permite identificar rapidamente os países com os menores e maiores consumos.
+Os pontos dispersos na parte superior do gráfico representam os outliers. Esses países têm um consumo de álcool significativamente maior do que a maioria dos outros, destacando-se como casos atípicos.
