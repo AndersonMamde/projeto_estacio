@@ -3,7 +3,7 @@ title: "Bedidas pelo mundo - Mineração - aplicação de algoritmos -  Porçõe
 fonte dos dados: "https://github.com/fivethirtyeight/data/tree/master/alcohol-consumption"
 output: html_document
 date: "2025-02-14"
-Grupo - Alunos: Rafael Uchôa Ribeiro - Matrícula: 202409030642, Mariana, Bruno, Matheus e Anderson de Oliveira Souza Mamede - Matrícula: 202410104921
+Grupo - Alunos: Rafael Uchôa Ribeiro - Matrícula: 202409030642, Mariana Teixeira da Paz - Matrícula: 202409179141, Bruno, Matheus e Anderson de Oliveira Souza Mamede - Matrícula: 202410104921
 ---
 VARIABLES:
 country - País
